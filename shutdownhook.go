@@ -37,19 +37,15 @@ func New(hook func()) error {
 		return err
 	}
 	updateWindow(hwnd)
-	go func() {
-		runtime.LockOSThread()
-		defer runtime.UnlockOSThread()
-		for {
-			var m msg
-			if getMessage(&m, hwnd, 0, 0) > 0 {
-				translateMessage(&m)
-				dispatchMessage(&m)
-			} else {
-				break
-			}
+	for {
+		var m msg
+		if getMessage(&m, hwnd, 0, 0) > 0 {
+			translateMessage(&m)
+			dispatchMessage(&m)
+		} else {
+			break
 		}
-	}()
+	}
 	return nil
 }
 
